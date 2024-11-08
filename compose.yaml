@@ -1,0 +1,33 @@
+services:
+  db:
+    build:
+      context: ./db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: "Asia/Tokyo"
+    volumes:
+      - mysql_volume:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+ 
+  web:
+    build:
+      context: ./web
+      args:
+        RAILS_APP_PATH: ${RAILS_APP_PATH}
+        RUN_USER: ${RUN_USER}
+        RUN_UID: ${RUN_UID}
+    command: bash -c "rm -f tmp/pids/server.pid && bin/dev"
+    volumes:
+      - ./web:${RAILS_APP_PATH}
+      - bundle_volume:/usr/local/bundle
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+volumes:
+  mysql_volume:
+  bundle_volume:

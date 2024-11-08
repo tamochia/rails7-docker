@@ -1,0 +1,3 @@
+CREATE USER 'dbadm'@'%' IDENTIFIED BY 'hogehoge';
+GRANT ALL PRIVILEGES ON *.* TO 'dbadm'@'%';
+FLUSH PRIVILEGES;
